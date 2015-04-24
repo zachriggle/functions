@@ -1,4 +1,3 @@
-
 import collections
 Function = collections.namedtuple('Function', ('type', 'derefcnt', 'name', 'args'))
 Argument = collections.namedtuple('Argument', ('type', 'derefcnt', 'name'))

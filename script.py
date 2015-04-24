@@ -74,4 +74,4 @@ Function = collections.namedtuple('Function', ('type', 'derefcnt', 'name', 'args
 Argument = collections.namedtuple('Argument', ('type', 'derefcnt', 'name'))
 
 functions = %s
-''' % pprint.pformat(Functions))
+'''.lstrip() % pprint.pformat(Functions))
