@@ -22,7 +22,7 @@ def extractTypeAndName(n, defaultName=None):
     if isinstance(t, c_ast.FuncDecl):
         return extractTypeAndName(t)
 
-    name     = t.declname or defaultName
+    name     = t.declname or defaultName or ''
 
     if isinstance(t.type, c_ast.Struct) \
     or isinstance(t.type, c_ast.Union) \
@@ -33,23 +33,27 @@ def extractTypeAndName(n, defaultName=None):
 
     return typename.lstrip('_'),d,name.lstrip('_')
 
-Function = collections.namedtuple('Function', ('type', 'derefcnt', 'name'))
+Function = collections.namedtuple('Function', ('type', 'derefcnt', 'name', 'args'))
 Argument = collections.namedtuple('Argument', ('type', 'derefcnt', 'name'))
 
 Functions = {}
 
 def ExtractFuncDecl(node):
     # The function name needs to be dereferenced.
-    f= Function(*extractTypeAndName(node))
+    ftype, fderef, fname = extractTypeAndName(node)
 
-    Functions[f] = []
+    if not fname:
+        print "Skipping function without a name!"
+        print node.show()
+        return
 
+    fargs = []
     for i, (argName, arg) in enumerate(node.args.children()):
         defname = 'arg%i' % i
         a = Argument(*extractTypeAndName(arg, defname))
-        Functions[f].append(a)
+        fargs.append(a)
 
-
+    Functions[fname] = Function(ftype, fderef, fname, fargs)
 
 class FuncDefVisitor(c_ast.NodeVisitor):
     def visit_FuncDecl(self, node, *a):
@@ -60,8 +64,8 @@ FuncDefVisitor().visit(ast)
 def Stringify(X):
     return '%s %s %s' % (X.type, X.derefcnt * '*', X.name)
 
-for Func, Args in Functions.items():
-    print Stringify(Func) + '(' + ','.join(Stringify(a) for a in Args) + ');'
+for Func in Functions.values():
+    print Stringify(Func) + '(' + ','.join(Stringify(a) for a in Func.args) + ');'
 
 with open('functions.py','wt+') as f:
     f.write('''

@@ -1,10 +1,68 @@
 #define _GNU_SOURCE             /* See feature_test_macros(7) */
 
-#include "prefix.h"
 
+// ------ MAKE PYCPARSER HAPPY ------
+#define __attribute__(...)
+#define __inline inline
+#define __restrict
+#define __extension__
+// #define __sighandler_t int
+
+typedef struct __builtin_va_list __builtin_va_list;
+
+#define __asm__(...)
+#define __volatile__(...)
+#define __signed__ signed
+#define __int128_t unsigned long long // Hacky
+// ------ MAKE PYCPARSER HAPPY ------
+
+
+#include <aio.h>
+#include <aliases.h>
+#include <alloca.h>
+#include <argp.h>
+#include <argz.h>
+#include <assert.h>
+#include <byteswap.h>
+#include <complex.h>
+#include <cpio.h>
+#include <crypt.h>
+#include <ctype.h>
+#include <dirent.h>
+#include <dlfcn.h>
+#include <elf.h>
+#include <endian.h>
+#include <envz.h>
+#include <err.h>
+#include <errno.h>
+#include <error.h>
+#include <execinfo.h>
 #include <fcntl.h>
+#include <features.h>
+#include <fenv.h>
+#include <fmtmsg.h>
+#include <fnmatch.h>
+#include <fstab.h>
+#include <fts.h>
+#include <ftw.h>
+#include <getopt.h>
+#include <glob.h>
+#include <grp.h>
+#include <gshadow.h>
+#include <iconv.h>
+#include <ifaddrs.h>
+#include <langinfo.h>
+#include <lastlog.h>
+#include <libgen.h>
+#include <libintl.h>
+#include <libio.h>
+#include <link.h>
+#include <locale.h>
 // #include <linux/getcpu.h>
 #include <malloc.h>
+#include <math.h>
+#include <mcheck.h>
+#include <memory.h>
 #include <sched.h>
 #include <signal.h>
 #include <stdarg.h>
