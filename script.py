@@ -1,10 +1,21 @@
+import argparse
 import collections
 import pprint
 from pwn import *
 from pycparser import *
 from pycparser import parse_file
 
-ast = parse_file(sys.argv[1])
+
+p = argparse.ArgumentParser(description='''
+Parse a header file into Python to extract the function signatures
+''')
+
+p.add_argument('file')
+p.add_argument('-v','--verbose',action='store_true')
+
+args = p.parse_args()
+
+ast = parse_file(args.file)
 
 
 def extractTypeAndName(n, defaultName=None):
@@ -38,6 +49,9 @@ Argument = collections.namedtuple('Argument', ('type', 'derefcnt', 'name'))
 
 Functions = {}
 
+def Stringify(X):
+    return '%s %s %s' % (X.type, X.derefcnt * '*', X.name)
+
 def ExtractFuncDecl(node):
     # The function name needs to be dereferenced.
     ftype, fderef, fname = extractTypeAndName(node)
@@ -53,7 +67,10 @@ def ExtractFuncDecl(node):
         a = Argument(*extractTypeAndName(arg, defname))
         fargs.append(a)
 
-    Functions[fname] = Function(ftype, fderef, fname, fargs)
+    Functions[fname] = Func = Function(ftype, fderef, fname, fargs)
+
+    if args.verbose:
+        print Stringify(Func) + '(' + ','.join(Stringify(a) for a in Func.args) + ');'
 
 class FuncDefVisitor(c_ast.NodeVisitor):
     def visit_FuncDecl(self, node, *a):
@@ -61,11 +78,7 @@ class FuncDefVisitor(c_ast.NodeVisitor):
 
 FuncDefVisitor().visit(ast)
 
-def Stringify(X):
-    return '%s %s %s' % (X.type, X.derefcnt * '*', X.name)
-
-for Func in Functions.values():
-    print Stringify(Func) + '(' + ','.join(Stringify(a) for a in Func.args) + ');'
+print "Parsed %i functions" % len(Functions)
 
 with open('functions.py','wt+') as f:
     f.write('''
