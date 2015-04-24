@@ -4,7 +4,7 @@ CC  = gcc
 CXX = g++
 
 # -- Output files --
-OUT ?= preprocessed.h
+OUT ?= preprocessed.h functions.py
 
 # -- Directories --
 SRC ?= .
@@ -30,10 +30,12 @@ all: $(OUT)
 
 # Output file
 # =========================================================
-$(OUT): $(OBJ_FILES)
+preprocessed.h: $(OBJ_FILES)
 	@echo Collecting $@ from [ $^ ]
 	cat $^ > $@
-	python script.py $^
+
+functions.py: preprocessed.h script.py
+	python script.py $<
 
 # Compile source files
 # These rules are rewritten into the dependencies file

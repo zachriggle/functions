@@ -1,4 +1,5 @@
 import collections
+import pprint
 from pwn import *
 from pycparser import *
 from pycparser import parse_file
@@ -74,4 +75,4 @@ Function = collections.namedtuple('Function', ('type', 'derefcnt', 'name'))
 Argument = collections.namedtuple('Argument', ('type', 'derefcnt', 'name'))
 
 functions = %s
-''' % Functions)
+''' % pprint.pformat(Functions))
