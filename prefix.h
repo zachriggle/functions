@@ -9,3 +9,4 @@ typedef struct __builtin_va_list __builtin_va_list;
 #define __asm__(...)
 #define __volatile__(...)
 #define __signed__ signed
+
