@@ -1,6 +1,6 @@
 
 import collections
-Function = collections.namedtuple('Function', ('type', 'derefcnt', 'name'))
+Function = collections.namedtuple('Function', ('type', 'derefcnt', 'name', 'args'))
 Argument = collections.namedtuple('Argument', ('type', 'derefcnt', 'name'))
 
 functions = {'Exit': Function(type='void', derefcnt=0, name='Exit', args=[Argument(type='int', derefcnt=0, name='status')]),
