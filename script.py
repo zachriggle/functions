@@ -70,7 +70,7 @@ for Func in Functions.values():
 with open('functions.py','wt+') as f:
     f.write('''
 import collections
-Function = collections.namedtuple('Function', ('type', 'derefcnt', 'name'))
+Function = collections.namedtuple('Function', ('type', 'derefcnt', 'name', 'args'))
 Argument = collections.namedtuple('Argument', ('type', 'derefcnt', 'name'))
 
 functions = %s
