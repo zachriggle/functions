@@ -44,7 +44,8 @@ typedef struct __builtin_va_list __builtin_va_list;
 // #include <sys/vm86.h>
 #include <sys/wait.h>
 
-#include <openssl/ssl.h>
+// Adding OpenSSL is nice, but adds a huge load time.
+// #include <openssl/ssl.h>
 
 #include <aio.h>
 #include <aliases.h>
