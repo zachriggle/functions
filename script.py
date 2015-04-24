@@ -67,3 +67,11 @@ def Stringify(X):
 for Func, Args in Functions.items():
     print Stringify(Func) + '(' + ','.join(Stringify(a) for a in Args) + ');'
 
+with open('functions.py','wt+') as f:
+    f.write('''
+import collections
+Function = collections.namedtuple('Function', ('type', 'derefcnt', 'name'))
+Argument = collections.namedtuple('Argument', ('type', 'derefcnt', 'name'))
+
+functions = %s
+''' % Functions)
