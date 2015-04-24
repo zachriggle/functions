@@ -4,6 +4,8 @@ Python repository containing parsed standard C library function and argument inf
 
 ## How do I use it?
 
-I already did the heavy lifting for you, just look at [functions.py].
+I already did the heavy lifting for you, just look at [functions.py][1].
 
 If you want to build it yourself, just clone the repo and `make clean all`.
+
+[1]: https://github.com/zachriggle/functions/blob/master/functions.py
