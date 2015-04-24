@@ -22,7 +22,7 @@ def extractTypeAndName(n, defaultName=None):
     if isinstance(t, c_ast.FuncDecl):
         return extractTypeAndName(t)
 
-    name     = t.declname
+    name     = t.declname or defaultName
 
     if isinstance(t.type, c_ast.Struct) \
     or isinstance(t.type, c_ast.Union) \
@@ -31,12 +31,7 @@ def extractTypeAndName(n, defaultName=None):
     else:
         typename = t.type.names[0]
 
-    if name:
-        name = name.lstrip('_')
-    else:
-        name = defaultName
-
-    return typename,d,name
+    return typename.lstrip('_'),d,name.lstrip('_')
 
 Function = collections.namedtuple('Function', ('type', 'derefcnt', 'name'))
 Argument = collections.namedtuple('Argument', ('type', 'derefcnt', 'name'))
