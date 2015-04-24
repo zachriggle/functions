@@ -97,6 +97,7 @@ typedef struct __builtin_va_list __builtin_va_list;
 #include <limits.h>
 #include <link.h>
 #include <locale.h>
+#include <lzma.h>
 #include <malloc.h>
 #include <math.h>
 #include <mcheck.h>
@@ -159,4 +160,4 @@ typedef struct __builtin_va_list __builtin_va_list;
 #include <wctype.h>
 #include <wordexp.h>
 #include <xlocale.h>
-
+#include <zlib.h>
