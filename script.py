@@ -33,8 +33,6 @@ def extractTypeAndName(n, defaultName=None):
     if isinstance(t, c_ast.FuncDecl):
         return extractTypeAndName(t)
 
-    name     = t.declname or defaultName or ''
-
     if isinstance(t.type, c_ast.Struct) \
     or isinstance(t.type, c_ast.Union) \
     or isinstance(t.type, c_ast.Enum):
@@ -42,6 +40,10 @@ def extractTypeAndName(n, defaultName=None):
     else:
         typename = t.type.names[0]
 
+    if typename == 'void' and d == 0 and not t.declname:
+        return None
+
+    name     = t.declname or defaultName or ''
     return typename.lstrip('_'),d,name.lstrip('_')
 
 Function = collections.namedtuple('Function', ('type', 'derefcnt', 'name', 'args'))
@@ -64,8 +66,10 @@ def ExtractFuncDecl(node):
     fargs = []
     for i, (argName, arg) in enumerate(node.args.children()):
         defname = 'arg%i' % i
-        a = Argument(*extractTypeAndName(arg, defname))
-        fargs.append(a)
+        argdata = extractTypeAndName(arg, defname)
+        if argdata is not None:
+            a = Argument(*argdata)
+            fargs.append(a)
 
     Functions[fname] = Func = Function(ftype, fderef, fname, fargs)
 
@@ -87,4 +91,4 @@ Function = collections.namedtuple('Function', ('type', 'derefcnt', 'name', 'args
 Argument = collections.namedtuple('Argument', ('type', 'derefcnt', 'name'))
 
 functions = %s
-'''.lstrip() % Functions)
+'''.lstrip() % pprint.pformat(Functions))
