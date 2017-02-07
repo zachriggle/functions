@@ -1,6 +1,6 @@
 NAME=functions
 ROOT=$(shell git rev-parse --show-toplevel)
-RUN=docker run --dns 8.8.8.8 --init --rm -h $(NAME) -it --privileged -P -v $(ROOT):/root
+RUN=docker run --net=none --init --rm -h $(NAME) -it -v $(ROOT):/root
 
 all: build run
 
