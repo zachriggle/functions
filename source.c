@@ -17,6 +17,14 @@ typedef struct __builtin_va_list __builtin_va_list;
 #define __alignof__(...) 0
 
 #define INIT // regex
+
+// Various syscalls
+typedef int key_serial_t;
+typedef unsigned int key_perm_t;
+typedef struct __user_cap_data_struct *cap_user_data_t;
+typedef struct __user_cap_header_struct* cap_user_header_t;
+typedef unsigned long aio_context_t;
+typedef unsigned long long u64;
 // ------ MAKE PYCPARSER HAPPY ------
 
 
@@ -245,3 +253,5 @@ typedef struct __builtin_va_list __builtin_va_list;
 #include <sys/vtimes.h>
 #include <sys/wait.h>
 #include <sys/xattr.h>
+
+#include "missing.h"

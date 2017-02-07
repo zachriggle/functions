@@ -4,7 +4,7 @@ CC  = gcc
 CXX = g++
 
 # -- Output files --
-OUT ?= preprocessed.h functions.py
+OUT ?= missing.h preprocessed.h functions.py
 
 # -- Directories --
 SRC ?= .
@@ -28,9 +28,12 @@ DEPFILE = .depfile
 
 all: $(OUT)
 
+missing.h:
+	bash missing.sh > "$@"
+
 # Output file
 # =========================================================
-preprocessed.h: $(OBJ_FILES)
+preprocessed.h: $(OBJ_FILES) missing.h
 	@echo Collecting $@ from [ $^ ]
 	cat $^ > $@
 
