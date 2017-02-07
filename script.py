@@ -1,10 +1,10 @@
 import argparse
 import collections
-import pprint
 from pwn import *
 from pycparser import *
 from pycparser import parse_file
 
+import pprint
 from funcparser import ExtractAllFuncDecls
 
 p = argparse.ArgumentParser(description='''
