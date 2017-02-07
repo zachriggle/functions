@@ -31,6 +31,9 @@ all: $(OUT)
 missing.h:
 	bash missing.sh > "$@"
 
+release:
+	$(MAKE) -C docker
+
 # Output file
 # =========================================================
 preprocessed.h: $(OBJ_FILES) missing.h
