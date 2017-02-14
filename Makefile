@@ -1,4 +1,3 @@
-
 # -- Compilers --
 CC  = gcc
 CXX = g++
@@ -26,13 +25,28 @@ OBJ_FILES = $(patsubst %.c, %.o, $(C_FILES)) $(patsubst %.cpp, %.o, $(CPP_FILES)
 # -- Dependencies --
 DEPFILE = .depfile
 
-all: $(OUT)
+all: $(NDK)
+	$(MAKE) $(OUT)
 
 missing.h:
 	bash missing.sh > "$@"
 
 release:
 	$(MAKE) -C docker
+
+# NDK zip file
+# =========================================================
+NDK=android-ndk-r13b
+ARCH_INCLUDE=android-ndk-r13b/platforms/android-23/arch-arm64/usr/include
+INCLUDES+=-I$(ARCH_INCLUDE)
+
+ndk: $(NDK)
+
+$(NDK): % : %-linux-x86_64.zip
+	unzip -o -b $^ $(ARCH_INCLUDE)/*.h
+
+$(NDK).zip:
+	wget -nc https://dl.google.com/android/repository/$@
 
 # Output file
 # =========================================================
@@ -62,7 +76,7 @@ functions.py: preprocessed.h script.py
 # =========================================================
 $(DEPFILE):
 	rm -f $(DEPFILE)
-	$(CC)  -E -MM $(CFLAGS) $(INCLUDES) $(CPP_FILES) $(C_FILES) -MF $(DEPFILE)
+	$(CC)  -E -MM $(CFLAGS) $(CPP_FILES) $(C_FILES) -MF $(DEPFILE)
 
 clean:
 	rm -f $(OUT) $(SRC)/*.o $(DEPFILE)

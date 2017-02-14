@@ -45,12 +45,13 @@ def ExtractFuncDecl(node, verbose=False):
         return
 
     fargs = []
-    for i, (argName, arg) in enumerate(node.args.children()):
-        defname = 'arg%i' % i
-        argdata = extractTypeAndName(arg, defname)
-        if argdata is not None:
-            a = Argument(*argdata)
-            fargs.append(a)
+    if node.args is not None:
+        for i, (argName, arg) in enumerate(node.args.children()):
+            defname = 'arg%i' % i
+            argdata = extractTypeAndName(arg, defname)
+            if argdata is not None:
+                a = Argument(*argdata)
+                fargs.append(a)
 
     Func = Function(ftype, fderef, fname, fargs)
 

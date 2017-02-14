@@ -4,6 +4,7 @@
 // ------ MAKE PYCPARSER HAPPY ------
 #define __attribute__(...)
 #define __inline inline
+#define __inline__ inline
 #define __restrict
 #define __extension__
 // #define __sighandler_t int
@@ -14,7 +15,10 @@ typedef struct __builtin_va_list __builtin_va_list;
 #define __volatile__(...)
 #define __signed__ signed
 #define __int128_t unsigned long long // Hacky
+#define __uint128_t unsigned long long // Hacky
 #define __alignof__(...) 0
+#define __signed signed
+#define _Atomic(x) x
 
 #define INIT // regex
 
@@ -29,229 +33,882 @@ typedef unsigned long long u64;
 
 
 
-// #include <sys/capability.h>
-#include <sys/epoll.h>
-#include <sys/file.h>
-#include <sys/io.h>
-#include <sys/ioctl.h>
-#include <sys/ipc.h>
-#include <sys/msg.h>
-#include <sys/mman.h>
-#include <sys/prctl.h>
-#include <sys/ptrace.h>
-#include <sys/resource.h>
-#include <sys/sem.h>
-#include <sys/sendfile.h>
-#include <sys/shm.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <sys/uio.h>
-#include <sys/utsname.h>
-// #include <sys/vm86.h>
-#include <sys/wait.h>
-
-// Adding OpenSSL is nice, but adds a huge load time.
-#include <openssl/ssl.h>
-
-#include <aio.h>
-#include <aliases.h>
-#include <alloca.h>
-#include <a.out.h>
-#include <argp.h>
-#include <argz.h>
-#include <ar.h>
-#include <assert.h>
-#include <byteswap.h>
-#include <complex.h>
-#include <cpio.h>
-#include <crypt.h>
-#include <ctype.h>
-#include <dirent.h>
-#include <dlfcn.h>
-// #include <elf.h>
-#include <endian.h>
-#include <envz.h>
-#include <err.h>
-#include <errno.h>
-#include <error.h>
-#include <execinfo.h>
-#include <fcntl.h>
-#include <features.h>
-#include <fenv.h>
-#include <fmtmsg.h>
-#include <fnmatch.h>
-#include <fpu_control.h>
-#include <fstab.h>
-#include <fts.h>
-#include <ftw.h>
-#include <_G_config.h>
-#include <gconv.h>
-#include <getopt.h>
-#include <glob.h>
-#include <gnu-versions.h>
-#include <grp.h>
-#include <gshadow.h>
-#include <iconv.h>
-#include <ieee754.h>
-#include <ifaddrs.h>
-#include <inttypes.h>
-#include <langinfo.h>
-#include <lastlog.h>
-#include <libgen.h>
-#include <libintl.h>
-#include <libio.h>
-#include <limits.h>
-#include <link.h>
-#include <locale.h>
-#include <lzma.h>
-#include <malloc.h>
-#include <math.h>
-#include <mcheck.h>
-#include <memory.h>
-#include <mntent.h>
-#include <monetary.h>
-#include <mqueue.h>
-#include <netdb.h>
-#include <nl_types.h>
-#include <nss.h>
-#include <obstack.h>
-#include <paths.h>
-#include <poll.h>
-#include <printf.h>
-#include <pthread.h>
-#include <pty.h>
-#include <pwd.h>
-#include <re_comp.h>
-#include <regex.h>
-// #include <regexp.h>
-#include <resolv.h>
-#include <sched.h>
-#include <search.h>
-#include <semaphore.h>
-#include <setjmp.h>
-#include <sgtty.h>
-#include <shadow.h>
-#include <signal.h>
-#include <spawn.h>
-#include <stab.h>
-// #include <stdc-predef.h>
-#include <stdint.h>
-#include <stdio_ext.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <strings.h>
-#include <stropts.h>
-#include <syscall.h>
-#include <sysexits.h>
-#include <syslog.h>
-#include <tar.h>
-#include <termio.h>
-#include <termios.h>
-// #include <tgmath.h>
-#include <thread_db.h>
-#include <time.h>
-#include <ttyent.h>
-// #include <uchar.h>
-#include <ucontext.h>
-#include <ulimit.h>
-#include <unistd.h>
-#include <ustat.h>
-#include <utime.h>
-#include <utmp.h>
-#include <utmpx.h>
-#include <values.h>
-#include <wait.h>
-#include <wchar.h>
-#include <wctype.h>
-#include <wordexp.h>
-#include <xlocale.h>
-#include <zlib.h>
-
-#include <sys/auxv.h>
-#include <sys/bitypes.h>
-#include <sys/cdefs.h>
-#include <sys/debugreg.h>
-#include <sys/dir.h>
-// #include <sys/elf.h>
-#include <sys/epoll.h>
-#include <sys/errno.h>
-#include <sys/eventfd.h>
-#include <sys/fanotify.h>
-#include <sys/fcntl.h>
-#include <sys/file.h>
-#include <sys/fsuid.h>
-#include <sys/gmon.h>
-#include <sys/gmon_out.h>
-#include <sys/inotify.h>
-#include <sys/ioctl.h>
-#include <sys/io.h>
-#include <sys/ipc.h>
-#include <sys/kd.h>
-#include <sys/klog.h>
-#include <sys/mman.h>
-#include <sys/mount.h>
-#include <sys/msg.h>
-#include <sys/mtio.h>
-#include <sys/param.h>
-#include <sys/pci.h>
-#include <sys/perm.h>
-#include <sys/personality.h>
-#include <sys/poll.h>
-#include <sys/prctl.h>
-#include <sys/procfs.h>
-#include <sys/profil.h>
-#include <sys/ptrace.h>
-#include <sys/queue.h>
-#include <sys/quota.h>
-#include <sys/raw.h>
-#include <sys/reboot.h>
-#include <sys/reg.h>
-#include <sys/resource.h>
-#include <sys/select.h>
-#include <sys/sem.h>
-#include <sys/sendfile.h>
-#include <sys/shm.h>
-#include <sys/signalfd.h>
-#include <sys/signal.h>
-#include <sys/socket.h>
-#include <sys/socketvar.h>
-#include <sys/soundcard.h>
-#include <sys/statfs.h>
-#include <sys/stat.h>
-#include <sys/statvfs.h>
-#include <sys/stropts.h>
-#include <sys/swap.h>
-#include <sys/syscall.h>
-#include <sys/sysctl.h>
-#include <sys/sysinfo.h>
-#include <sys/syslog.h>
-#include <sys/sysmacros.h>
-#include <sys/termios.h>
-#include <sys/timeb.h>
-#include <sys/time.h>
-#include <sys/timerfd.h>
-#include <sys/times.h>
-#include <sys/timex.h>
-#include <sys/ttychars.h>
-#include <sys/ttydefaults.h>
-#include <sys/types.h>
-#include <sys/ucontext.h>
-#include <sys/uio.h>
-#include <sys/ultrasound.h>
-#include <sys/un.h>
-#include <sys/unistd.h>
-#include <sys/user.h>
-#include <sys/ustat.h>
-#include <sys/utsname.h>
-#include <sys/vfs.h>
-#include <sys/vlimit.h>
-// #include <sys/vm86.h>
-#include <sys/vt.h>
-#include <sys/vtimes.h>
-#include <sys/wait.h>
-#include <sys/xattr.h>
-
-#include "missing.h"
+#include "alloca.h"
+#include "android/api-level.h"
+#include "android/asset_manager.h"
+#include "android/asset_manager_jni.h"
+#include "android/bitmap.h"
+#include "android/configuration.h"
+#include "android/dlext.h"
+#include "android/input.h"
+#include "android/keycodes.h"
+#include "android/log.h"
+#include "android/looper.h"
+#include "android/multinetwork.h"
+#include "android/native_activity.h"
+#include "android/native_window.h"
+#include "android/native_window_jni.h"
+#include "android/obb.h"
+#include "android/rect.h"
+#include "android/sensor.h"
+#include "android/storage_manager.h"
+#include "android/trace.h"
+#include "android/tts.h"
+#include "android/window.h"
+#include "ar.h"
+#include "arpa/inet.h"
+#include "arpa/nameser.h"
+#include "arpa/nameser_compat.h"
+#include "arpa/telnet.h"
+// #include "asm/a.out.h"
+// #include "asm/auxvec.h"
+// #include "asm/bitsperlong.h"
+// #include "asm/byteorder.h"
+// #include "asm/errno.h"
+// #include "asm/fcntl.h"
+// #include "asm/hwcap.h"
+// #include "asm/ioctl.h"
+// #include "asm/ioctls.h"
+// #include "asm/ipcbuf.h"
+// #include "asm/kvm.h"
+// #include "asm/kvm_para.h"
+// #include "asm/mman.h"
+// #include "asm/msgbuf.h"
+// #include "asm/param.h"
+// #include "asm/poll.h"
+// #include "asm/posix_types.h"
+// #include "asm/ptrace.h"
+// #include "asm/resource.h"
+// #include "asm/sembuf.h"
+// #include "asm/setup.h"
+// #include "asm/shmbuf.h"
+// #include "asm/sigcontext.h"
+// #include "asm/siginfo.h"
+// #include "asm/signal.h"
+// #include "asm/socket.h"
+// #include "asm/sockios.h"
+// #include "asm/stat.h"
+// #include "asm/statfs.h"
+// #include "asm/swab.h"
+// #include "asm/termbits.h"
+// #include "asm/termios.h"
+// #include "asm/types.h"
+// #include "asm/unistd.h"
+// #include "asm-generic/auxvec.h"
+// #include "asm-generic/bitsperlong.h"
+// #include "asm-generic/errno-base.h"
+// #include "asm-generic/errno.h"
+// #include "asm-generic/fcntl.h"
+// #include "asm-generic/int-l64.h"
+// #include "asm-generic/int-ll64.h"
+// #include "asm-generic/ioctl.h"
+// #include "asm-generic/ioctls.h"
+// #include "asm-generic/ipcbuf.h"
+// #include "asm-generic/kvm_para.h"
+// #include "asm-generic/mman-common.h"
+// #include "asm-generic/mman.h"
+// #include "asm-generic/msgbuf.h"
+// #include "asm-generic/param.h"
+// #include "asm-generic/poll.h"
+// #include "asm-generic/posix_types.h"
+// #include "asm-generic/resource.h"
+// #include "asm-generic/sembuf.h"
+// #include "asm-generic/setup.h"
+// #include "asm-generic/shmbuf.h"
+// #include "asm-generic/shmparam.h"
+// #include "asm-generic/siginfo.h"
+// #include "asm-generic/signal-defs.h"
+// #include "asm-generic/signal.h"
+// #include "asm-generic/socket.h"
+// #include "asm-generic/sockios.h"
+// #include "asm-generic/stat.h"
+// #include "asm-generic/statfs.h"
+// #include "asm-generic/swab.h"
+// #include "asm-generic/termbits.h"
+// #include "asm-generic/termios.h"
+// #include "asm-generic/types.h"
+// #include "asm-generic/ucontext.h"
+// #include "asm-generic/unistd.h"
+#include "assert.h"
+#include "byteswap.h"
+#include "complex.h"
+#include "ctype.h"
+#include "dirent.h"
+#include "dlfcn.h"
+// #include "EGL/egl.h"
+// #include "EGL/eglext.h"
+// #include "EGL/eglplatform.h"
+#include "elf.h"
+#include "endian.h"
+#include "err.h"
+#include "errno.h"
+#include "fcntl.h"
+#include "features.h"
+#include "fenv.h"
+#include "fnmatch.h"
+#include "fts.h"
+#include "ftw.h"
+#include "getopt.h"
+// #include "GLES/gl.h"
+// #include "GLES/glext.h"
+// #include "GLES/glplatform.h"
+// #include "GLES2/gl2.h"
+// #include "GLES2/gl2ext.h"
+// #include "GLES2/gl2platform.h"
+// #include "GLES3/gl3.h"
+// #include "GLES3/gl31.h"
+// #include "GLES3/gl3ext.h"
+// #include "GLES3/gl3platform.h"
+#include "grp.h"
+#include "inttypes.h"
+#include "jni.h"
+#include "KHR/khrplatform.h"
+#include "lastlog.h"
+#include "libgen.h"
+#include "limits.h"
+#include "link.h"
+// #include "linux/a.out.h"
+// #include "linux/acct.h"
+// #include "linux/adb.h"
+// #include "linux/adfs_fs.h"
+// #include "linux/affs_hardblocks.h"
+// #include "linux/agpgart.h"
+// #include "linux/aio_abi.h"
+// #include "linux/android_alarm.h"
+// #include "linux/apm_bios.h"
+// #include "linux/arcfb.h"
+// #include "linux/ashmem.h"
+// #include "linux/atalk.h"
+// #include "linux/atm.h"
+// #include "linux/atm_eni.h"
+// #include "linux/atm_he.h"
+// #include "linux/atm_idt77105.h"
+// #include "linux/atm_nicstar.h"
+// #include "linux/atm_tcp.h"
+// #include "linux/atm_zatm.h"
+// #include "linux/atmapi.h"
+// #include "linux/atmarp.h"
+// #include "linux/atmbr2684.h"
+// #include "linux/atmclip.h"
+// #include "linux/atmdev.h"
+// #include "linux/atmioc.h"
+// #include "linux/atmlec.h"
+// #include "linux/atmmpc.h"
+// #include "linux/atmppp.h"
+// #include "linux/atmsap.h"
+// #include "linux/atmsvc.h"
+// #include "linux/audit.h"
+// #include "linux/auto_fs.h"
+// #include "linux/auto_fs4.h"
+// #include "linux/auxvec.h"
+// #include "linux/ax25.h"
+// #include "linux/b1lli.h"
+// #include "linux/baycom.h"
+// #include "linux/bcache.h"
+// #include "linux/bcm933xx_hcs.h"
+// #include "linux/bfs_fs.h"
+// #include "linux/binder.h"
+// #include "linux/binfmts.h"
+// #include "linux/blkpg.h"
+// #include "linux/blktrace_api.h"
+// #include "linux/bpqether.h"
+// #include "linux/bsg.h"
+// #include "linux/btrfs.h"
+// #include "linux/byteorder/big_endian.h"
+// #include "linux/byteorder/little_endian.h"
+// #include "linux/caif/caif_socket.h"
+// #include "linux/caif/if_caif.h"
+// #include "linux/can/bcm.h"
+// #include "linux/can/error.h"
+// #include "linux/can/gw.h"
+// #include "linux/can/netlink.h"
+// #include "linux/can/raw.h"
+// #include "linux/can.h"
+// #include "linux/capability.h"
+// #include "linux/capi.h"
+// #include "linux/cciss_defs.h"
+// #include "linux/cciss_ioctl.h"
+// #include "linux/cdrom.h"
+// #include "linux/cgroupstats.h"
+// #include "linux/chio.h"
+// #include "linux/cifs/cifs_mount.h"
+// #include "linux/cm4000_cs.h"
+// #include "linux/cn_proc.h"
+// #include "linux/coda.h"
+// #include "linux/coda_psdev.h"
+// #include "linux/coff.h"
+// #include "linux/compiler.h"
+// #include "linux/connector.h"
+// #include "linux/const.h"
+// #include "linux/cramfs_fs.h"
+// #include "linux/cuda.h"
+// #include "linux/cyclades.h"
+// #include "linux/cycx_cfm.h"
+// #include "linux/dcbnl.h"
+// #include "linux/dccp.h"
+// #include "linux/dlm.h"
+// #include "linux/dlm_device.h"
+// #include "linux/dlm_netlink.h"
+// #include "linux/dlm_plock.h"
+// #include "linux/dlmconstants.h"
+// #include "linux/dm-ioctl.h"
+// #include "linux/dm-log-userspace.h"
+// #include "linux/dn.h"
+// #include "linux/dqblk_xfs.h"
+// #include "linux/dvb/audio.h"
+// #include "linux/dvb/ca.h"
+// #include "linux/dvb/dmx.h"
+// #include "linux/dvb/frontend.h"
+// #include "linux/dvb/net.h"
+// #include "linux/dvb/osd.h"
+// #include "linux/dvb/version.h"
+// #include "linux/dvb/video.h"
+// #include "linux/edd.h"
+// #include "linux/efs_fs_sb.h"
+// #include "linux/elf-em.h"
+// #include "linux/elf-fdpic.h"
+// #include "linux/elf.h"
+// #include "linux/elfcore.h"
+// #include "linux/errno.h"
+// #include "linux/errqueue.h"
+// #include "linux/ethtool.h"
+// #include "linux/eventpoll.h"
+// #include "linux/fadvise.h"
+// #include "linux/falloc.h"
+// #include "linux/fanotify.h"
+// #include "linux/fb.h"
+// #include "linux/fcntl.h"
+// #include "linux/fd.h"
+// #include "linux/fdreg.h"
+// #include "linux/fib_rules.h"
+// #include "linux/fiemap.h"
+// #include "linux/filter.h"
+// #include "linux/firewire-cdev.h"
+// #include "linux/firewire-constants.h"
+// #include "linux/flat.h"
+// #include "linux/fs.h"
+// #include "linux/fsl_hypervisor.h"
+// #include "linux/fuse.h"
+// #include "linux/futex.h"
+// #include "linux/gameport.h"
+// #include "linux/gen_stats.h"
+// #include "linux/genetlink.h"
+// #include "linux/genwqe/genwqe_card.h"
+// #include "linux/gfs2_ondisk.h"
+// #include "linux/gigaset_dev.h"
+// #include "linux/hash_info.h"
+// #include "linux/hdlc/ioctl.h"
+// #include "linux/hdlc.h"
+// #include "linux/hdlcdrv.h"
+// #include "linux/hdreg.h"
+// #include "linux/hid.h"
+// #include "linux/hiddev.h"
+// #include "linux/hidraw.h"
+// #include "linux/hpet.h"
+// #include "linux/hsi/hsi_char.h"
+// #include "linux/hsr_netlink.h"
+// #include "linux/hw_breakpoint.h"
+// #include "linux/hysdn_if.h"
+// #include "linux/i2c-dev.h"
+// #include "linux/i2c.h"
+// #include "linux/i2o-dev.h"
+// #include "linux/i8k.h"
+// #include "linux/icmp.h"
+// #include "linux/icmpv6.h"
+// #include "linux/if.h"
+// #include "linux/if_addr.h"
+// #include "linux/if_addrlabel.h"
+// #include "linux/if_alg.h"
+// #include "linux/if_arcnet.h"
+// #include "linux/if_arp.h"
+// #include "linux/if_bonding.h"
+// #include "linux/if_bridge.h"
+// #include "linux/if_cablemodem.h"
+// #include "linux/if_eql.h"
+// #include "linux/if_ether.h"
+// #include "linux/if_fc.h"
+// #include "linux/if_fddi.h"
+// #include "linux/if_frad.h"
+// #include "linux/if_hippi.h"
+// #include "linux/if_infiniband.h"
+// #include "linux/if_link.h"
+// #include "linux/if_ltalk.h"
+// #include "linux/if_packet.h"
+// #include "linux/if_phonet.h"
+// #include "linux/if_plip.h"
+// #include "linux/if_ppp.h"
+// #include "linux/if_pppol2tp.h"
+// #include "linux/if_pppolac.h"
+// #include "linux/if_pppopns.h"
+// #include "linux/if_pppox.h"
+// #include "linux/if_slip.h"
+// #include "linux/if_team.h"
+// #include "linux/if_tun.h"
+// #include "linux/if_tunnel.h"
+// #include "linux/if_vlan.h"
+// #include "linux/if_x25.h"
+// #include "linux/igmp.h"
+// #include "linux/in.h"
+// #include "linux/in6.h"
+// #include "linux/in_route.h"
+// #include "linux/inet_diag.h"
+// #include "linux/inotify.h"
+// #include "linux/input.h"
+// #include "linux/ioctl.h"
+// #include "linux/ion.h"
+// #include "linux/ioprio.h"
+// #include "linux/ip.h"
+// #include "linux/ip6_tunnel.h"
+// #include "linux/ip_vs.h"
+// #include "linux/ipc.h"
+// #include "linux/ipmi.h"
+// #include "linux/ipmi_msgdefs.h"
+// #include "linux/ipsec.h"
+// #include "linux/ipv6.h"
+// #include "linux/ipv6_route.h"
+// #include "linux/ipx.h"
+// #include "linux/irda.h"
+// #include "linux/irqnr.h"
+// #include "linux/isdn/capicmd.h"
+// #include "linux/isdn.h"
+// #include "linux/isdn_divertif.h"
+// #include "linux/isdn_ppp.h"
+// #include "linux/isdnif.h"
+// #include "linux/iso_fs.h"
+// #include "linux/ivtv.h"
+// #include "linux/ivtvfb.h"
+// #include "linux/ixjuser.h"
+// #include "linux/jffs2.h"
+// #include "linux/joystick.h"
+// #include "linux/kd.h"
+// #include "linux/kdev_t.h"
+// #include "linux/kernel-page-flags.h"
+// #include "linux/kernel.h"
+// #include "linux/kernelcapi.h"
+// #include "linux/kexec.h"
+// #include "linux/keyboard.h"
+// #include "linux/keychord.h"
+// #include "linux/keyctl.h"
+// #include "linux/kvm.h"
+// #include "linux/kvm_para.h"
+// #include "linux/l2tp.h"
+// #include "linux/libc-compat.h"
+// #include "linux/limits.h"
+// #include "linux/llc.h"
+// #include "linux/loop.h"
+// #include "linux/lp.h"
+// #include "linux/magic.h"
+// #include "linux/major.h"
+// #include "linux/map_to_7segment.h"
+// #include "linux/matroxfb.h"
+// #include "linux/mdio.h"
+// #include "linux/media.h"
+// #include "linux/mei.h"
+// #include "linux/mempolicy.h"
+// #include "linux/meye.h"
+// #include "linux/mic_common.h"
+// #include "linux/mic_ioctl.h"
+// #include "linux/mii.h"
+// #include "linux/minix_fs.h"
+// #include "linux/mman.h"
+// #include "linux/mmc/ioctl.h"
+// #include "linux/mmtimer.h"
+// #include "linux/module.h"
+// #include "linux/mqueue.h"
+// #include "linux/mroute.h"
+// #include "linux/mroute6.h"
+// #include "linux/msdos_fs.h"
+// #include "linux/msg.h"
+// #include "linux/mtio.h"
+// #include "linux/n_r3964.h"
+// #include "linux/nbd.h"
+// #include "linux/ncp.h"
+// #include "linux/ncp_fs.h"
+// #include "linux/ncp_mount.h"
+// #include "linux/ncp_no.h"
+// #include "linux/neighbour.h"
+// #include "linux/net.h"
+// #include "linux/net_dropmon.h"
+// #include "linux/net_tstamp.h"
+// #include "linux/netconf.h"
+// #include "linux/netdevice.h"
+// #include "linux/netfilter/ipset/ip_set.h"
+// #include "linux/netfilter/ipset/ip_set_bitmap.h"
+// #include "linux/netfilter/ipset/ip_set_hash.h"
+// #include "linux/netfilter/ipset/ip_set_list.h"
+// #include "linux/netfilter/nf_conntrack_common.h"
+// #include "linux/netfilter/nf_conntrack_ftp.h"
+// #include "linux/netfilter/nf_conntrack_sctp.h"
+// #include "linux/netfilter/nf_conntrack_tcp.h"
+// #include "linux/netfilter/nf_conntrack_tuple_common.h"
+// #include "linux/netfilter/nf_nat.h"
+// #include "linux/netfilter/nf_tables.h"
+// #include "linux/netfilter/nf_tables_compat.h"
+// #include "linux/netfilter/nfnetlink.h"
+// #include "linux/netfilter/nfnetlink_acct.h"
+// #include "linux/netfilter/nfnetlink_compat.h"
+// #include "linux/netfilter/nfnetlink_conntrack.h"
+// #include "linux/netfilter/nfnetlink_cthelper.h"
+// #include "linux/netfilter/nfnetlink_cttimeout.h"
+// #include "linux/netfilter/nfnetlink_log.h"
+// #include "linux/netfilter/nfnetlink_queue.h"
+// #include "linux/netfilter/x_tables.h"
+// #include "linux/netfilter/xt_addrtype.h"
+// #include "linux/netfilter/xt_AUDIT.h"
+// #include "linux/netfilter/xt_bpf.h"
+// #include "linux/netfilter/xt_cgroup.h"
+// #include "linux/netfilter/xt_CHECKSUM.h"
+// #include "linux/netfilter/xt_CLASSIFY.h"
+// #include "linux/netfilter/xt_cluster.h"
+// #include "linux/netfilter/xt_comment.h"
+// #include "linux/netfilter/xt_connbytes.h"
+// #include "linux/netfilter/xt_connlabel.h"
+// #include "linux/netfilter/xt_connlimit.h"
+// #include "linux/netfilter/xt_CONNMARK.h"
+// #include "linux/netfilter/xt_CONNSECMARK.h"
+// #include "linux/netfilter/xt_conntrack.h"
+// #include "linux/netfilter/xt_cpu.h"
+// #include "linux/netfilter/xt_CT.h"
+// #include "linux/netfilter/xt_dccp.h"
+// #include "linux/netfilter/xt_devgroup.h"
+// #include "linux/netfilter/xt_DSCP.h"
+// #include "linux/netfilter/xt_ecn.h"
+// #include "linux/netfilter/xt_esp.h"
+// #include "linux/netfilter/xt_hashlimit.h"
+// #include "linux/netfilter/xt_helper.h"
+// #include "linux/netfilter/xt_HMARK.h"
+// #include "linux/netfilter/xt_IDLETIMER.h"
+// #include "linux/netfilter/xt_ipcomp.h"
+// #include "linux/netfilter/xt_iprange.h"
+// #include "linux/netfilter/xt_ipvs.h"
+// #include "linux/netfilter/xt_l2tp.h"
+// #include "linux/netfilter/xt_LED.h"
+// #include "linux/netfilter/xt_length.h"
+// #include "linux/netfilter/xt_limit.h"
+// #include "linux/netfilter/xt_LOG.h"
+// #include "linux/netfilter/xt_mac.h"
+// #include "linux/netfilter/xt_MARK.h"
+// #include "linux/netfilter/xt_multiport.h"
+// #include "linux/netfilter/xt_nfacct.h"
+// #include "linux/netfilter/xt_NFLOG.h"
+// #include "linux/netfilter/xt_NFQUEUE.h"
+// #include "linux/netfilter/xt_osf.h"
+// #include "linux/netfilter/xt_owner.h"
+// #include "linux/netfilter/xt_physdev.h"
+// #include "linux/netfilter/xt_pkttype.h"
+// #include "linux/netfilter/xt_policy.h"
+// #include "linux/netfilter/xt_quota.h"
+// #include "linux/netfilter/xt_RATEEST.h"
+// #include "linux/netfilter/xt_realm.h"
+// #include "linux/netfilter/xt_recent.h"
+// #include "linux/netfilter/xt_rpfilter.h"
+// #include "linux/netfilter/xt_sctp.h"
+// #include "linux/netfilter/xt_SECMARK.h"
+// #include "linux/netfilter/xt_set.h"
+// #include "linux/netfilter/xt_socket.h"
+// #include "linux/netfilter/xt_state.h"
+// #include "linux/netfilter/xt_statistic.h"
+// #include "linux/netfilter/xt_string.h"
+// #include "linux/netfilter/xt_SYNPROXY.h"
+// #include "linux/netfilter/xt_TCPMSS.h"
+// #include "linux/netfilter/xt_TCPOPTSTRIP.h"
+// #include "linux/netfilter/xt_tcpudp.h"
+// #include "linux/netfilter/xt_TEE.h"
+// #include "linux/netfilter/xt_time.h"
+// #include "linux/netfilter/xt_TPROXY.h"
+// #include "linux/netfilter/xt_u32.h"
+// #include "linux/netfilter.h"
+// #include "linux/netfilter_arp/arp_tables.h"
+// #include "linux/netfilter_arp/arpt_mangle.h"
+// #include "linux/netfilter_arp.h"
+// #include "linux/netfilter_bridge/ebt_802_3.h"
+// #include "linux/netfilter_bridge/ebt_among.h"
+// #include "linux/netfilter_bridge/ebt_arp.h"
+// #include "linux/netfilter_bridge/ebt_arpreply.h"
+// #include "linux/netfilter_bridge/ebt_ip.h"
+// #include "linux/netfilter_bridge/ebt_ip6.h"
+// #include "linux/netfilter_bridge/ebt_limit.h"
+// #include "linux/netfilter_bridge/ebt_log.h"
+// #include "linux/netfilter_bridge/ebt_mark_m.h"
+// #include "linux/netfilter_bridge/ebt_mark_t.h"
+// #include "linux/netfilter_bridge/ebt_nat.h"
+// #include "linux/netfilter_bridge/ebt_nflog.h"
+// #include "linux/netfilter_bridge/ebt_pkttype.h"
+// #include "linux/netfilter_bridge/ebt_redirect.h"
+// #include "linux/netfilter_bridge/ebt_stp.h"
+// #include "linux/netfilter_bridge/ebt_ulog.h"
+// #include "linux/netfilter_bridge/ebt_vlan.h"
+// #include "linux/netfilter_bridge/ebtables.h"
+// #include "linux/netfilter_bridge.h"
+// #include "linux/netfilter_decnet.h"
+// #include "linux/netfilter_ipv4/ip_tables.h"
+// #include "linux/netfilter_ipv4/ipt_ah.h"
+// #include "linux/netfilter_ipv4/ipt_CLUSTERIP.h"
+// #include "linux/netfilter_ipv4/ipt_ecn.h"
+// #include "linux/netfilter_ipv4/ipt_LOG.h"
+// #include "linux/netfilter_ipv4/ipt_REJECT.h"
+// #include "linux/netfilter_ipv4/ipt_ttl.h"
+// #include "linux/netfilter_ipv4/ipt_ULOG.h"
+// #include "linux/netfilter_ipv4.h"
+// #include "linux/netfilter_ipv6/ip6_tables.h"
+// #include "linux/netfilter_ipv6/ip6t_ah.h"
+// #include "linux/netfilter_ipv6/ip6t_frag.h"
+// #include "linux/netfilter_ipv6/ip6t_HL.h"
+// #include "linux/netfilter_ipv6/ip6t_ipv6header.h"
+// #include "linux/netfilter_ipv6/ip6t_LOG.h"
+// #include "linux/netfilter_ipv6/ip6t_mh.h"
+// #include "linux/netfilter_ipv6/ip6t_NPT.h"
+// #include "linux/netfilter_ipv6/ip6t_opts.h"
+// #include "linux/netfilter_ipv6/ip6t_REJECT.h"
+// #include "linux/netfilter_ipv6/ip6t_rt.h"
+// #include "linux/netfilter_ipv6.h"
+// #include "linux/netlink.h"
+// #include "linux/netlink_diag.h"
+// #include "linux/netrom.h"
+// #include "linux/nfc.h"
+// #include "linux/nfs.h"
+// #include "linux/nfs2.h"
+// #include "linux/nfs3.h"
+// #include "linux/nfs4.h"
+// #include "linux/nfs4_mount.h"
+// #include "linux/nfs_fs.h"
+// #include "linux/nfs_idmap.h"
+// #include "linux/nfs_mount.h"
+// #include "linux/nfsacl.h"
+// #include "linux/nfsd/cld.h"
+// #include "linux/nfsd/debug.h"
+// #include "linux/nfsd/export.h"
+// #include "linux/nfsd/nfsfh.h"
+// #include "linux/nfsd/stats.h"
+// #include "linux/nl80211.h"
+// #include "linux/nubus.h"
+// #include "linux/nvme.h"
+// #include "linux/nvram.h"
+// #include "linux/omap3isp.h"
+// #include "linux/omapfb.h"
+// #include "linux/oom.h"
+// #include "linux/openvswitch.h"
+// #include "linux/packet_diag.h"
+// #include "linux/param.h"
+// #include "linux/parport.h"
+// #include "linux/patchkey.h"
+// #include "linux/pci.h"
+// #include "linux/pci_regs.h"
+// #include "linux/perf_event.h"
+// #include "linux/personality.h"
+// #include "linux/pfkeyv2.h"
+// #include "linux/pg.h"
+// #include "linux/phantom.h"
+// #include "linux/phonet.h"
+// #include "linux/pkt_cls.h"
+// #include "linux/pkt_sched.h"
+// #include "linux/pktcdvd.h"
+// #include "linux/pmu.h"
+// #include "linux/poll.h"
+// #include "linux/posix_types.h"
+// #include "linux/ppdev.h"
+// #include "linux/ppp-comp.h"
+// #include "linux/ppp-ioctl.h"
+// #include "linux/ppp_defs.h"
+// #include "linux/pps.h"
+// #include "linux/prctl.h"
+// #include "linux/ptp_clock.h"
+// #include "linux/ptrace.h"
+// #include "linux/qnx4_fs.h"
+// #include "linux/qnxtypes.h"
+// #include "linux/quota.h"
+// #include "linux/radeonfb.h"
+// #include "linux/raid/md_p.h"
+// #include "linux/raid/md_u.h"
+// #include "linux/random.h"
+// #include "linux/raw.h"
+// #include "linux/rds.h"
+// #include "linux/reboot.h"
+// #include "linux/reiserfs_fs.h"
+// #include "linux/reiserfs_xattr.h"
+// #include "linux/resource.h"
+// #include "linux/rfkill.h"
+// #include "linux/romfs_fs.h"
+// #include "linux/rose.h"
+// #include "linux/route.h"
+// #include "linux/rtc.h"
+// #include "linux/rtnetlink.h"
+// #include "linux/scc.h"
+// #include "linux/sched.h"
+// #include "linux/screen_info.h"
+// #include "linux/sctp.h"
+// #include "linux/sdla.h"
+// #include "linux/seccomp.h"
+// #include "linux/securebits.h"
+// #include "linux/selinux_netlink.h"
+// #include "linux/sem.h"
+// #include "linux/serial.h"
+// #include "linux/serial_core.h"
+// #include "linux/serial_reg.h"
+// #include "linux/serio.h"
+// #include "linux/shm.h"
+// #include "linux/signal.h"
+// #include "linux/signalfd.h"
+// #include "linux/snmp.h"
+// #include "linux/sock_diag.h"
+// #include "linux/socket.h"
+// #include "linux/sockios.h"
+// #include "linux/som.h"
+// #include "linux/sonet.h"
+// #include "linux/sonypi.h"
+// #include "linux/sound.h"
+// #include "linux/soundcard.h"
+// #include "linux/spi/spidev.h"
+// #include "linux/stat.h"
+// #include "linux/stddef.h"
+// #include "linux/string.h"
+// #include "linux/sunrpc/debug.h"
+// #include "linux/suspend_ioctls.h"
+// #include "linux/sw_sync.h"
+// #include "linux/swab.h"
+// #include "linux/sync.h"
+// #include "linux/synclink.h"
+// #include "linux/sysctl.h"
+// #include "linux/sysinfo.h"
+// #include "linux/taskstats.h"
+// #include "linux/tc_act/tc_csum.h"
+// #include "linux/tc_act/tc_defact.h"
+// #include "linux/tc_act/tc_gact.h"
+// #include "linux/tc_act/tc_ipt.h"
+// #include "linux/tc_act/tc_mirred.h"
+// #include "linux/tc_act/tc_nat.h"
+// #include "linux/tc_act/tc_pedit.h"
+// #include "linux/tc_act/tc_skbedit.h"
+// #include "linux/tc_ematch/tc_em_cmp.h"
+// #include "linux/tc_ematch/tc_em_meta.h"
+// #include "linux/tc_ematch/tc_em_nbyte.h"
+// #include "linux/tc_ematch/tc_em_text.h"
+// #include "linux/tcp.h"
+// #include "linux/tcp_metrics.h"
+// #include "linux/telephony.h"
+// #include "linux/termios.h"
+// #include "linux/time.h"
+// #include "linux/times.h"
+// #include "linux/timex.h"
+// #include "linux/tiocl.h"
+// #include "linux/tipc.h"
+// #include "linux/tipc_config.h"
+// #include "linux/toshiba.h"
+// #include "linux/tty.h"
+// #include "linux/tty_flags.h"
+// #include "linux/types.h"
+// #include "linux/udf_fs_i.h"
+// #include "linux/udp.h"
+// #include "linux/uhid.h"
+// #include "linux/uinput.h"
+// #include "linux/uio.h"
+// #include "linux/ultrasound.h"
+// #include "linux/un.h"
+// #include "linux/unistd.h"
+// #include "linux/unix_diag.h"
+// #include "linux/usb/audio.h"
+// #include "linux/usb/cdc-wdm.h"
+// #include "linux/usb/cdc.h"
+// #include "linux/usb/ch11.h"
+// #include "linux/usb/ch9.h"
+// #include "linux/usb/f_accessory.h"
+// #include "linux/usb/f_mtp.h"
+// #include "linux/usb/functionfs.h"
+// #include "linux/usb/g_printer.h"
+// #include "linux/usb/gadgetfs.h"
+// #include "linux/usb/midi.h"
+// #include "linux/usb/tmc.h"
+// #include "linux/usb/video.h"
+// #include "linux/usbdevice_fs.h"
+// #include "linux/utime.h"
+// #include "linux/utsname.h"
+// #include "linux/uuid.h"
+// #include "linux/uvcvideo.h"
+// #include "linux/v4l2-common.h"
+// #include "linux/v4l2-controls.h"
+// #include "linux/v4l2-dv-timings.h"
+// #include "linux/v4l2-mediabus.h"
+// #include "linux/v4l2-subdev.h"
+// #include "linux/version.h"
+// #include "linux/veth.h"
+// #include "linux/vfio.h"
+// #include "linux/vhost.h"
+// #include "linux/videodev2.h"
+// #include "linux/virtio_9p.h"
+// #include "linux/virtio_balloon.h"
+// #include "linux/virtio_blk.h"
+// #include "linux/virtio_config.h"
+// #include "linux/virtio_console.h"
+// #include "linux/virtio_ids.h"
+// #include "linux/virtio_net.h"
+// #include "linux/virtio_pci.h"
+// #include "linux/virtio_ring.h"
+// #include "linux/virtio_rng.h"
+// #include "linux/vm_sockets.h"
+// #include "linux/vsp1.h"
+// #include "linux/vt.h"
+// #include "linux/wait.h"
+// #include "linux/wanrouter.h"
+// #include "linux/watchdog.h"
+// #include "linux/wimax/i2400m.h"
+// #include "linux/wimax.h"
+// #include "linux/wireless.h"
+// #include "linux/x25.h"
+// #include "linux/xattr.h"
+// #include "linux/xfrm.h"
+// #include "linux/zorro.h"
+// #include "linux/zorro_ids.h"
+#include "locale.h"
+// #include "machine/asm.h"
+// #include "machine/elf_machdep.h"
+// #include "machine/endian.h"
+// #include "machine/exec.h"
+// #include "machine/fenv.h"
+// #include "machine/ieee.h"
+// #include "machine/setjmp.h"
+// #include "machine/wchar_limits.h"
+#include "malloc.h"
+#include "math.h"
+#include "media/NdkMediaCodec.h"
+#include "media/NdkMediaCrypto.h"
+#include "media/NdkMediaDrm.h"
+#include "media/NdkMediaError.h"
+#include "media/NdkMediaExtractor.h"
+#include "media/NdkMediaFormat.h"
+#include "media/NdkMediaMuxer.h"
+#include "memory.h"
+#include "mntent.h"
+#include "net/ethernet.h"
+#include "net/ethertypes.h"
+#include "net/if.h"
+#include "net/if_arp.h"
+#include "net/if_ether.h"
+#include "net/if_ieee1394.h"
+#include "net/if_packet.h"
+#include "net/if_types.h"
+#include "net/route.h"
+#include "netdb.h"
+#include "netinet/ether.h"
+#include "netinet/icmp6.h"
+#include "netinet/if_ether.h"
+#include "netinet/in.h"
+#include "netinet/in6.h"
+#include "netinet/in_systm.h"
+#include "netinet/ip.h"
+#include "netinet/ip6.h"
+#include "netinet/ip_icmp.h"
+#include "netinet/tcp.h"
+#include "netinet/udp.h"
+#include "netpacket/packet.h"
+#include "nsswitch.h"
+#include "OMXAL/OpenMAXAL.h"
+#include "OMXAL/OpenMAXAL_Android.h"
+#include "OMXAL/OpenMAXAL_Platform.h"
+#include "pathconf.h"
+#include "paths.h"
+#include "poll.h"
+#include "pthread.h"
+#include "pwd.h"
+#include "regex.h"
+#include "resolv.h"
+#include "sched.h"
+#include "search.h"
+#include "semaphore.h"
+#include "setjmp.h"
+#include "sgtty.h"
+#include "signal.h"
+#include "SLES/OpenSLES.h"
+#include "SLES/OpenSLES_Android.h"
+#include "SLES/OpenSLES_AndroidConfiguration.h"
+#include "SLES/OpenSLES_AndroidMetadata.h"
+#include "SLES/OpenSLES_Platform.h"
+#include "stdatomic.h"
+#include "stdint.h"
+#include "stdio.h"
+#include "stdlib.h"
+#include "string.h"
+#include "strings.h"
+#include "sys/auxv.h"
+#include "sys/cachectl.h"
+#include "sys/capability.h"
+#include "sys/cdefs.h"
+#include "sys/cdefs_elf.h"
+#include "sys/endian.h"
+#include "sys/epoll.h"
+#include "sys/errno.h"
+#include "sys/eventfd.h"
+#include "sys/file.h"
+#include "sys/fsuid.h"
+#include "sys/glibc-syscalls.h"
+#include "sys/inotify.h"
+#include "sys/ioctl.h"
+#include "sys/ioctl_compat.h"
+#include "sys/ipc.h"
+#include "sys/klog.h"
+#include "sys/limits.h"
+#include "sys/mman.h"
+#include "sys/mount.h"
+#include "sys/msg.h"
+#include "sys/param.h"
+#include "sys/personality.h"
+#include "sys/poll.h"
+#include "sys/prctl.h"
+#include "sys/procfs.h"
+#include "sys/ptrace.h"
+#include "sys/queue.h"
+#include "sys/reboot.h"
+#include "sys/reg.h"
+#include "sys/resource.h"
+#include "sys/select.h"
+#include "sys/sem.h"
+#include "sys/sendfile.h"
+#include "sys/shm.h"
+#include "sys/signal.h"
+#include "sys/signalfd.h"
+#include "sys/socket.h"
+#include "sys/socketcalls.h"
+#include "sys/stat.h"
+#include "sys/statfs.h"
+#include "sys/statvfs.h"
+#include "sys/swap.h"
+#include "sys/syscall.h"
+#include "sys/sysconf.h"
+#include "sys/sysinfo.h"
+#include "sys/syslimits.h"
+#include "sys/sysmacros.h"
+#include "sys/system_properties.h"
+#include "sys/time.h"
+#include "sys/timerfd.h"
+#include "sys/times.h"
+#include "sys/timex.h"
+#include "sys/ttychars.h"
+#include "sys/ttydefaults.h"
+#include "sys/ttydev.h"
+#include "sys/types.h"
+#include "sys/ucontext.h"
+#include "sys/uio.h"
+#include "sys/un.h"
+#include "sys/user.h"
+#include "sys/utime.h"
+#include "sys/utsname.h"
+#include "sys/vfs.h"
+#include "sys/vt.h"
+#include "sys/wait.h"
+#include "sys/xattr.h"
+#include "syslog.h"
+#include "termio.h"
+#include "termios.h"
+#include "thread_db.h"
+#include "time.h"
+// #include "time64.h"
+#include "uchar.h"
+#include "ucontext.h"
+#include "unistd.h"
+#include "util.h"
+#include "utime.h"
+#include "utmp.h"
+#include "wchar.h"
+#include "wctype.h"
+#include "xlocale.h"
+#include "zconf.h"
+#include "zlib.h"
